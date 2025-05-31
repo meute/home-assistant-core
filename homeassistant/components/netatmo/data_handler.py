@@ -41,10 +41,11 @@ from .const import (
     NETATMO_CREATE_FAN,
     NETATMO_CREATE_LIGHT,
     NETATMO_CREATE_ROOM_SENSOR,
-    NETATMO_CREATE_SELECT,
     NETATMO_CREATE_SENSOR,
     NETATMO_CREATE_SWITCH,
     NETATMO_CREATE_WEATHER_SENSOR,
+    NETATMO_CREATE_HOME_CLIMATE_PRESET_SELECT,
+    NETATMO_CREATE_HOME_CLIMATE_SCHEDULE_SELECT,
     PLATFORMS,
     WEBHOOK_ACTIVATION,
     WEBHOOK_DEACTIVATION,
@@ -317,7 +318,7 @@ class NetatmoDataHandler:
             await self.subscribe(HOME, signal_home, None, home_id=home.entity_id)
             await self.subscribe(EVENT, signal_home, None, home_id=home.entity_id)
 
-            self.setup_climate_schedule_select(home, signal_home)
+            self.setup_home(home, signal_home)
             self.setup_rooms(home, signal_home)
             self.setup_modules(home, signal_home)
 
@@ -430,10 +431,8 @@ class NetatmoDataHandler:
                         ),
                     )
 
-    def setup_climate_schedule_select(
-        self, home: pyatmo.Home, signal_home: str
-    ) -> None:
-        """Set up climate schedule per home."""
+    def setup_home(self, home: pyatmo.Home, signal_home: str) -> None:
+        """Set up home."""
         if NetatmoDeviceCategory.climate in [
             next(iter(x)) for x in [room.features for room in home.rooms.values()] if x
         ]:
@@ -443,7 +442,17 @@ class NetatmoDataHandler:
 
             async_dispatcher_send(
                 self.hass,
-                NETATMO_CREATE_SELECT,
+                NETATMO_CREATE_HOME_CLIMATE_SCHEDULE_SELECT,
+                NetatmoHome(
+                    self,
+                    home,
+                    home.entity_id,
+                    signal_home,
+                ),
+            )
+            async_dispatcher_send(
+                self.hass,
+                NETATMO_CREATE_HOME_CLIMATE_PRESET_SELECT,
                 NetatmoHome(
                     self,
                     home,

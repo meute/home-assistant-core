@@ -221,7 +221,7 @@ class NetatmoThermostat(NetatmoRoomEntity, ClimateEntity):
             self._attr_hvac_modes.append(HVACMode.OFF)
 
         self._attr_unique_id = f"{self.device.entity_id}-{self.device_type}"
-
+        
     async def async_added_to_hass(self) -> None:
         """Entity created."""
         await super().async_added_to_hass()
@@ -271,18 +271,18 @@ class NetatmoThermostat(NetatmoRoomEntity, ClimateEntity):
         if self.home.entity_id != home["id"]:
             return
 
-        if data["event_type"] == EVENT_TYPE_THERM_MODE:
-            self._attr_preset_mode = NETATMO_MAP_PRESET[home[EVENT_TYPE_THERM_MODE]]
-            self._attr_hvac_mode = HVAC_MAP_NETATMO[self._attr_preset_mode]
-            if self._attr_preset_mode == PRESET_FROST_GUARD:
-                self._attr_target_temperature = self._hg_temperature
-            elif self._attr_preset_mode == PRESET_AWAY:
-                self._attr_target_temperature = self._away_temperature
-            elif self._attr_preset_mode in [PRESET_SCHEDULE, PRESET_HOME]:
-                self.async_update_callback()
-                self.data_handler.async_force_update(self._signal_name)
-            self.async_write_ha_state()
-            return
+        # if data["event_type"] == EVENT_TYPE_THERM_MODE:
+            # self._attr_preset_mode = NETATMO_MAP_PRESET[home[EVENT_TYPE_THERM_MODE]]
+            # self._attr_hvac_mode = HVAC_MAP_NETATMO[self._attr_preset_mode]
+            # if self._attr_preset_mode == PRESET_FROST_GUARD:
+                # self._attr_target_temperature = self._hg_temperature
+            # elif self._attr_preset_mode == PRESET_AWAY:
+                # self._attr_target_temperature = self._away_temperature
+            # elif self._attr_preset_mode in [PRESET_SCHEDULE, PRESET_HOME]:
+                # self.async_update_callback()
+                # self.data_handler.async_force_update(self._signal_name)
+            # self.async_write_ha_state()
+            # return
 
         for room in home.get("rooms", []):
             if (
@@ -371,7 +371,7 @@ class NetatmoThermostat(NetatmoRoomEntity, ClimateEntity):
             _LOGGER.error("Preset mode '%s' not available", preset_mode)
 
         self.async_write_ha_state()
-
+        
     async def async_set_temperature(self, **kwargs: Any) -> None:
         """Set new target temperature for 2 hours."""
         await self.device.async_therm_set(

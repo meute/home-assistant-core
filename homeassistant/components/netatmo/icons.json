@@ -82,5 +82,18 @@
     "unregister_webhook": {
       "service": "mdi:link-variant-off"
     }
+  },
+  "entity_component": {
+    "_": {
+      "select": {
+        "home_heating_mode": {
+          "default": "mdi:home-thermometer-outline",
+          "state.schedule": "mdi:calendar-clock-outline",
+          "state.away": "mdi:home-export-outline",
+          "state.frost_guard": "mdi:snowflake-thermometer",
+          "state.boost": "mdi:rocket-launch-outline"
+        }
+      }
+    }
   }
 }
