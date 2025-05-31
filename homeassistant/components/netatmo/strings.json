@@ -186,6 +186,16 @@
         "name": "Preferred position"
       }
     },
+    "select": {
+      "home_heating_mode": {
+        "name": "Home Heating Mode",
+        "state": {
+          "schedule": "Schedule",
+          "away": "[%key:common::state::not_home%]",
+          "frost_guard": "Frost guard"
+        }
+      }
+    },
     "sensor": {
       "temp_trend": {
         "name": "Temperature trend"
